@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Mutual Fund Recommendation</title>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+	<style>
+        #retireagevssavingsgraph {
+           display:none;
+        }
+        #id1 {
+        color : white;
+        }
+.container{
+    background-color:#fff;
+    height:auto;;
+    width:600px;
+    margin:100px auto;
+    padding:50px 60px; 
+}
+        #graphsubmit {
+            margin : 10px;
+        }
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: #C5E955;
+	color: #222;
+  font-weight: 600;
+  font-family: 'Montserrat';
+  background: #c5e9ff;
+  background-image: url(https://www.investmentexecutive.com/wp-content/uploads/sites/3/2017/11/Market_chart.jpeg);
+
+}
+
+* {
+	box-sizing: border-box;
+}
+.input-container {
+	display: -ms-flexbox; 
+	display: flex;
+	width: 100%;
+	margin: auto;
+}
+
+.input-field {
+	width: 100%;
+	padding: 15px 20px;
+	margin: 10px;
+	font-size: 14px;
+	font-weight: bold;
+
+}
+
+.input-field:focus {
+	border: 2px solid dodgerblue;
+}
+
+.btn {
+	background-color: dodgerblue;
+	color: white;
+	padding: 15px 20px;
+	border: none;
+	position: relative;
+	cursor: pointer;
+	width: 100%;
+	opacity: 0.9;
+}
+
+.btn:hover {
+	opacity: 1;
+}
+.combine-label-input{
+	padding:10px;
+
+}
+button {
+    color: white;
+    background-color: #4791d0;
+    border-radius: 5px;
+    border: 1px solid #4791d0;
+    padding: 5px 10px 8px 10px;
+  }
+
+	</style>
+</head>
+<body>
+	<div class="container">
+		<form>
+			<div class="combine-label-input">
+				<label> Current Age </label>
+				<input class="input-field" name="currentAge" id = "currentAge" type="text" onkeypress="return isNumberKey(event)" required>
+			</div>
+			<div class="combine-label-input">
+				<label> Income </label>
+				<input class="input-field" type="text" name="income"  id = "income" onkeypress="return isNumberKey(event)" required>
+			</div>
+			<div class="combine-label-input">
+				<label> Excepted Expenditure </label>
+				<input class="input-field" type="text" name="expenditure" id = "expenditure" onkeypress="return isNumberKey(event)" required>
+			</div>
+			<div class="combine-label-input">
+				<label> Life Expectence </label>
+				<input class="input-field" type="text" name="expectence"  id = "lifeexpectancy" onkeypress="return isNumberKey(event)" required>
+			</div>
+			<input type="submit" onclick = "mre()" id = "submit" class="btn">
+            <input type= "submit" id = "graphsubmit" class ="btn" value = "graph">
+            
+            
+		</form>
+	</div>
+    <div id = "retireagevssavingsgraph">
+    
+    </div>
+    <p id="id1"> </p>
+    <button id = "getMessage" onclick = "fun()">Which MutualFund is Better</button>
+<script>
+     function fun2(singer){   
+     const req = new XMLHttpRequest();
+     req.open("GET",singer, true);
+     req.send();
+     var array=[];
+     var arr = [];
+     var count = 0;
+     req.onload=function(){
+     const json = JSON.parse(req.responseText);
+        
+        json.dataset.data.forEach(function(val) {
+           //html += "<tr><td>" + val[0] +"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + val[1] + "</td></tr>";
+           if (count % 30 == 0){
+           arr.push(val[1]);
+           }
+        });
+for(var i = 0; i < arr.length - 1; i++) {
+  array.push(((arr[i] - arr[i + 1]) / arr[i + 1]) * 100);
+}
+var m=24;
+var ans=getResult(array,m);
+         final.push(ans);
+
+};
+}
+function getResult(array,m){
+var s=1.0;
+for(var i=0;i<array.length;i++)
+s=s*(1+(array[i]/100));
+s=Math.pow(s,12/m)-1;
+s=s.toFixed(6);
+s=parseFloat(s);
+f=0.06;
+var mean=0.0;
+for(var i=0;i<array.length;i++)
+mean=mean+(array[i]/100);
+mean=mean/m;
+var sd=0.0;
+for(var i=0;i<array.length;i++)
+sd=sd+Math.pow((array[i]/100-mean),2);
+sd=Math.pow(sd,1/2)/Math.pow(m,1/2);
+var sharpRatio=(s-f)/(sd*Math.pow(12,1/2));
+return sharpRatio;
+}
+    var final=[]
+    function fun(){
+        var links = [];
+        links.push("https://www.quandl.com/api/v3/datasets/AMFI/140249.json?api_key=xQ4oqEYN-bwBn6zqyx61");
+        links.push("https://www.quandl.com/api/v3/datasets/AMFI/146980.json?api_key=xQ4oqEYN-bwBn6zqyx61");
+        links.push("https://www.quandl.com/api/v3/datasets/AMFI/146979.json?api_key=xQ4oqEYN-bwBn6zqyx61");
+        links.push("https://www.quandl.com/api/v3/datasets/AMFI/146977.json?api_key=xQ4oqEYN-bwBn6zqyx61");
+        links.push("https://www.quandl.com/api/v3/datasets/AMFI/146978.json?api_key=xQ4oqEYN-bwBn6zqyx61");
+        links.push("https://www.quandl.com/api/v3/datasets/AMFI/146641.json?api_key=xQ4oqEYN-bwBn6zqyx61");
+        links.push("https://www.quandl.com/api/v3/datasets/AMFI/146644.json?api_key=xQ4oqEYN-bwBn6zqyx61");
+        links.push("https://www.quandl.com/api/v3/datasets/AMFI/146643.json?api_key=xQ4oqEYN-bwBn6zqyx61");
+        links.push("https://www.quandl.com/api/v3/datasets/AMFI/146642.json?api_key=xQ4oqEYN-bwBn6zqyx61");
+        links.push("https://www.quandl.com/api/v3/datasets/AMFI/147006.json?api_key=xQ4oqEYN-bwBn6zqyx61");
+        for (var i = 0; i < links.length; i++) {
+            fun2(links[i])
+        }
+        maxindex = 0;
+        maxvalue = final[0];
+        for (var i = 0; i < final.length;i++) {
+            if (final[i] > maxvalue) {
+                maxvalue = final[i];
+                maxindex = i;
+            }
+        }
+        const req = new XMLHttpRequest();
+     req.open("GET",links[maxindex], true);
+     req.send();
+    req.onload=function(){
+     const json = JSON.parse(req.responseText);
+        document.getElementById("id1").innerHTML = json.dataset.name;
+        
+    
+};
+}
+    function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+        return false;
+    return true;
+}
+    function mre() {
+            var currentAge = document.getElementById("currentAge").value;
+            var income = document.getElementById("income").value;
+            var expenditure = document.getElementById("expenditure").value;
+            var lifeexpectance = document.getElementById("lifeexpectancy").value;
+            console.log(currentAge);
+            console.log(income);
+            console.log(expenditure);
+            console.log(lifeexpectance);
+    }
+
+</script>
+    
+</body>
+</html>
